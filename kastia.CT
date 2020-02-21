@@ -1,0 +1,572 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CheatTable CheatEngineTableVersion="29">
+  <CheatEntries>
+    <CheatEntry>
+      <ID>0</ID>
+      <Description>"Jump Down Anywhere"</Description>
+      <LastState/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>//Jump Down Anywhere
+//v179.1
+[ENABLE]
+01C233BE:
+db EB
+
+01C48BCC:
+db 90 90
+
+01D21218:
+db EB
+
+[DISABLE]
+//backup: 83 ? ? 83 ? ? 0F 8F ? ? ? ? 57 E8 (last jnl in function)
+01C233BE: // 7D ? 8B ? 8B ? ? 8D ? ? ? 50 8B CE [First Result]
+db 7D
+
+//backup: 8B ? F7 ? 1B ? 81 ? ? ? ? ? 81 ? ? ? ? ? E8 (last je in function)
+01C48BCC: // 74 ?? 8B ?? C7 ?? ?? ?? ?? ?? ?? ?? ?? ?? E8 ?? ?? ?? ?? 85 C0 75 ?? 89 ?? ?? ?? ?? ?? EB ?? 8B ??
+db 74 5B
+
+01D21218: // 74 ? 3B ? ? ? 75 ? 8B ? ? ? 3B
+db 74
+</AssemblerScript>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>7</ID>
+      <Description>"Jump Down Anywhere V2"</Description>
+      <LastState/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[enable]
+
+aobscan(JDA1,7D 1E 8B ? 8B ? ? 8D ? ? 14 50 8B CE)
+aobscan(JDA2,74 ?? 8B ?? C7 ?? ?? ?? ?? ?? ?? ?? ?? ?? E8 ?? ?? ?? ?? 85 C0 75 ?? 89 ?? ?? ?? ?? ?? EB ?? 8B ??)
+aobscan(JDA3,74 ? 3B ? ? ? 75 ? 8B ? ? ? 3B ? ? ? 0F 84 ? ? ? ?)
+label(J_DA1)
+label(J_DA2)
+label(J_DA3)
+registersymbol(J_DA1)
+registersymbol(J_DA2)
+registersymbol(J_DA3)
+
+JDA1:
+J_DA1:
+db EB
+
+JDA2:
+J_DA2:
+db 90 90
+
+JDA3:
+J_DA3:
+db EB
+
+[disable]
+J_DA1:
+db 7D
+
+J_DA2:
+db 74 5B
+
+J_DA3:
+db 74
+
+unregistersymbol(J_DA1)
+unregistersymbol(J_DA2)
+unregistersymbol(J_DA3)
+</AssemblerScript>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>1</ID>
+      <Description>"Mobs Suck Left"</Description>
+      <LastState/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[ENABLE]
+label(S_ML)
+registersymbol(S_ML)
+aobscan(SML,D9 C9 DC ? ? ? DC ? ? ? DC ? DD ? D8 D9 DF E0 F6 ? ? 7A ? DD ?)
+
+
+
+
+SML:
+S_ML:
+db D8 D9
+
+
+[DISABLE]
+
+
+S_ML:
+db D9 C9
+
+
+unregistersymbol(S_ML)
+</AssemblerScript>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>2</ID>
+      <Description>"No Knockback"</Description>
+      <LastState/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[Enable]
+013128EA:
+db 00
+
+
+[Disable]
+013128EA: // 01 00 00 00 d8 d1 df e0
+db 01
+</AssemblerScript>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>3</ID>
+      <Description>"Mob Disarm (DC when disable)"</Description>
+      <LastState/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>Full Mob Disarm:
+
+
+[Enable]
+0105DEF0: // 75 ?? 8B CE E8 ?? ?? ?? ?? 8B CE E8 ?? ?? ?? ?? 8B CE E8 ?? ?? ?? ?? 8B CE E8 ?? ?? ?? ?? 8B ?? ?? ?? ?? ?? ??
+jmp 0105E4CA // 8B 86 ?? ?? ?? ?? 85 C0 0F 84 ?? ?? ?? ?? 2B 45 ?? 0F 89 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 8D ?? ?? ?? ?? ?? ??
+db 90 90 90 90
+
+
+[Disable]
+0105DEF0:
+db 75 15 8B CE E8 94 A5 FE FF
+</AssemblerScript>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>4</ID>
+      <Description>"Skill Injection (RIP)"</Description>
+      <LastState Activated="1"/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>// Skill Injection + Mach ND
+
+/*
+12120011 (Blazing Extinction 4th job) Blaze Wizard Skill
+12100029 (Ignition) Blaze Wizard
+12121002 (Towering Inferno) Blaze Wizard
+25100010 (Fox Spirits 2nd job) Shade Skill
+61101100 (Impact Wave 2nd job) Kaiser
+25100002 (Ground Pound (shockwave) 2nd job) Shade Skill
+25110003 (Shockwave Punch (shockwave) 3rd job) Shade Skill
+35121052 (Distortion Bomb, mechanic) turn down delay
+142120030 (kinesis Mental Tempest Hyper Skill)
+4321006 (Flying Assaulter - jump to activate) Dual Blade
+4331000 (Bloody Storm) Dual Blade
+4331006 (Chains of Hell) Dual Blade
+24111006 (Rapier Wit Dash &amp; Damage) phantom
+36110005 (Triangulation, works with FMA) Xenon
+112001006 (Majestic Trumpet, works with FMA) Beast Tamer
+31201010 (Demon Strike, auto-exceed)
+101000101 (Air Riot) Zero: Beta
+101000201 (Shadow Strike) Zero: Alpha
+101001100 (Shadow Strike) Zero - both
+#37110006
+#37120022
+#12121055 dragon blaze
+*/
+
+[enable]
+label(GN_D)
+label(h_1)
+label(h_2)
+label(h_3)
+label(h_4)
+label(h_5)
+label(h_6)
+registersymbol(GN_D)
+registersymbol(h_1)
+registersymbol(h_2)
+registersymbol(h_3)
+registersymbol(h_4)
+registersymbol(h_5)
+registersymbol(h_6)
+aobscan(GND,75 2E 83 BD ? ? ? ? ? 75 25 8B 4D ? 51 8B 95 ? ? ? ? 52 8B 45 ?)
+aobscan(h1,0F 84 ?? ?? ?? ?? 2B 9E ?? ?? ?? ?? 0F 88 ?? ?? ?? ?? A1 ?? ?? ?? ?? 85 C0)
+aobscan(h2,0F 88 ?? ?? ?? ?? A1 ?? ?? ?? ?? 85 C0 74 ?? 8B 50 ?? 8D 48 ??)
+aobscan(h3,0F 84 ?? ?? ?? ?? 8B 16 8B 42 ?? 8B CE FF D0 3D ?? ?? ?? ?? 74 ?? 3D ?? ?? ?? ?? 74 ?? 3D ?? ?? ?? ?? 74 ?? 3D ?? ?? ?? ?? 74 ?? 3D ?? ?? ?? ?? 75 ?? 8D 4C 24 ?? 51)
+aobscan(h4,8B ?? ?? ?? ?? ?? 8B 44 24 ?? 6A ?? 6A ?? 6A ?? 6A ?? 8D 4C 24 ?? 51)
+aobscan(h5,0F 87 ?? ?? ?? ?? 0F B6 ?? ?? ?? ?? ?? FF 24 ?? ?? ?? ?? ?? 84 DB 74 ?? 8B 8E ?? ?? ?? ?? 85 C9)
+aobscan(h6,FF ? ? ? ? ? ? 84 ? 74 ? 8B ? ? ? ? ? 85 ? 0f 84 ? ? ? ? 8B ? ? ? 57 52)
+aobscan(h7,81 BE ?? ?? ?? ?? ?? ?? ?? ?? 8B CE 75 ?? 8B 44 24 ?? 6A ??)
+
+alloc(skill_id_hook,128)
+label(skill_id_return)
+alloc(delay,4)
+define(skill_id, #12120011)
+
+delay:
+dw 0
+h1:
+h_1:
+db 90 90 90 90 90 90
+h2:
+h_2:
+db 90 90 90 90 90 90
+h3:
+h_3:
+db 90 E9
+h4:
+h_4:
+jmp skill_id_hook
+nop
+skill_id_return:
+skill_id_hook:
+inc [delay]
+cmp dword ptr [delay], #2
+jne skill_id_return
+mov [delay], 0
+mov edx,skill_id
+jmp skill_id_return
+h5:
+h_5:
+db 90 90 90 90 90 90
+h6:
+h_6:
+jmp h7
+dw 9090
+
+GND:
+GN_D:
+db EB
+
+[disable]
+GN_D:
+db 75
+h_1:
+db 0F 84 86 03 00 00
+h_2:
+db 0F 88 7A 03 00 00
+h_3:
+db 0F 84 CC 00 00 00
+h_4:
+mov edx,[esi+0001237C]
+h_5:
+db 0F 87 7F 01 00 00
+h_6:
+jmp dword ptr [ecx*4+01D247DC]
+dealloc(skill_id_hook)
+dealloc(delay)
+</AssemblerScript>
+      <Hotkeys>
+        <Hotkey>
+          <Action>Toggle Activation</Action>
+          <Keys>
+            <Key>97</Key>
+          </Keys>
+          <ID>0</ID>
+        </Hotkey>
+      </Hotkeys>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>5</ID>
+      <Description>"FMA"</Description>
+      <LastState Activated="1"/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[enable]
+aobscan(FMA,75 1C 81 BC ? ? ? ? ? ? ? ? ? 0F 85 ? ? ? ? 83 7C ? ? ? 0F 85)
+aobscan(N_LD,74 14 8B 11 8B 42 ? 53 53 53 53 53 53 53 53 68 EA ? ? ? FF D0 39 9E)
+label(FMA1)
+label(N_LD1)
+registersymbol(FMA1)
+registersymbol(N_LD1)
+FMA:
+FMA1:
+db 73
+
+N_LD:
+N_LD1:
+db EB
+
+[disable]
+FMA1:
+db 75
+
+N_LD1:
+db 74
+
+unregistersymbol(FMA1)
+unregistersymbol(N_LD1)
+</AssemblerScript>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>6</ID>
+      <Description>"No Delay Mining"</Description>
+      <LastState/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[ENABLE]
+label(H_1)
+label(H_2)
+label(H_3)
+registersymbol(H_1)
+registersymbol(H_2)
+registersymbol(H_3)
+aobscan(H1,7C ? 83 ? ? ? ? ? ? 7F ? 6A ? 6A ? 8B ? E8 ? ? ? ? 5F)
+aobscan(H2,7F ? 6A ? 6A ? 8B ? E8 ? ? ? ? 5F 5E 83 ? ? C2 ? ? 8B ? ? ? ? ?)
+aobscan(H3,75 13 55 ? ? ? ? 8B CB)
+
+
+H1:
+H_1:
+db 90 90
+
+H2:
+H_2:
+db EB
+
+H3:
+H_3:
+db 90 90
+
+[DISABLE]
+
+H_1:
+db 7C 42
+
+H_2:
+db 7F 13
+
+H_3:
+db 75 13
+
+unregistersymbol(H_1)
+unregistersymbol(H_2)
+unregistersymbol(H_3)
+</AssemblerScript>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>8</ID>
+      <Description>"Unlimited Attack"</Description>
+      <LastState Activated="1"/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[enable]
+aobscan(Ultd_1,7E ? 83 ? ? 7D ? 8B ? ? 2B ? 3D)
+label(Ultd1)
+registersymbol(Ultd1)
+Ultd_1:
+Ultd1:
+db EB
+
+[disable]
+Ultd1:
+db 7E
+unregistersymbol(Ultd1)
+</AssemblerScript>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>9</ID>
+      <Description>"Physical No Delay"</Description>
+      <LastState/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[enable]
+aobscan(MachNoDelay,75 2E 83 BD ? ? ? ? ? 75 25 8B 4D ? 51 8B 95 ? ? ? ? 52 8B 45 ?)
+label(_MachNoDelay)
+registersymbol(_MachNoDelay)
+MachNoDelay:
+_MachNoDelay:
+db EB
+
+[disable]
+_MachNoDelay:
+db 75
+unregistersymbol(_MachNoDelay)
+</AssemblerScript>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>10</ID>
+      <Description>"Auto Attack (In progress)"</Description>
+      <LastState/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[enable]
+define(KEY_NORMAL,0)
+define(KEY_EXTENDED,1)
+
+define(VK_CONTROL,11)
+define(VK_RSHIFT,A1)
+define(VK_INSERT,2D)
+define(VK_DELETE,2E)
+define(VK_HOME,24)
+define(VK_END,23)
+define(VK_PRIOR,21)
+define(VK_NEXT,22)
+
+define(_HoldAttack,0) //Set flag to 1 for combos, 0 for normal attacks
+define(_AttackKey,20) //Choose your key here after defining vk code
+define(_AttackKeyType,KEY_EXTENDED)
+define(_AttackDelay,100) //Set delay in milliseconds
+
+alloc(AutoAttack,512)
+alloc(PressKey,128)
+alloc(HoldAttack,1)
+alloc(AttackDelay,4)
+label(Exit)
+
+define(KEY_PRESS,0)
+define(KEY_UP,1)
+define(MAPVK_VK_TO_VSC,0)
+
+AttackDelay:
+dd 0
+
+PressKey:
+push ebx
+push edx
+push esi
+push ecx
+mov edx, [esp+10+4]
+mov esi, [esp+10+8]
+mov ebx, [esp+10+C]
+mov ecx, edx
+push MAPVK_VK_TO_VSC
+push ecx
+call MapVirtualKeyA
+shl eax,#16
+shl esi,#24
+shl ebx,#31
+or eax, esi
+or eax, ebx
+mov ecx,eax
+push ecx
+push edx
+call 01E33430 //A1 ?? ?? ?? ?? 85 C0 74 ?? 8D 48 ?? 8B 01 8B 00
+pop ecx
+pop esi
+pop edx
+pop ebx
+ret 000C
+
+AutoAttack:
+cmp dword ptr [esp],01C2018A //8B C8 B8 ?? ?? ?? ?? F7 E9 C1 FA ?? 8B C2 C1 E8 ?? 03 C2 83 F8 ?? 74 ?? 81 F9 ?? ?? ?? ?? 75 ?? 80 BE ?? ?? ?? ?? ?? 74 ?? 8B 56 ?? 8B 42 ?? 8D 4E ?? FF D0
+
+pushad
+jne Exit
+test eax,eax
+je Exit
+test eax,eax
+inc [AttackDelay]
+cmp [AttackDelay],_AttackDelay
+jne Exit
+mov [AttackDelay],0
+push KEY_PRESS
+push _AttackKeyType
+push _AttackKey
+call PressKey
+cmp byte ptr [HoldAttack], 1
+je Exit
+nop
+push KEY_UP
+push _AttackKeyType
+push _AttackKey
+call PressKey
+jmp Exit
+
+Exit:
+popad
+jmp 01C3A870
+
+02687BC0:
+dd AutoAttack
+
+[disable]
+02687BC0: // 4 Byte Scan
+dd 01C3CD50 //6A ?? 68 ?? ?? ?? ?? 64 A1 ?? ?? ?? ?? 50 83 EC ?? 56 A1 ?? ?? ?? ?? 33 C4 50 8D 44 24 ?? 64 A3 ?? ?? ?? ?? 8B 0D ?? ?? ?? ?? 85 C9 74 ?? 8D 44 24 ?? 50 E8 ?? ?? ?? ?? 8B 44 24 ??
+
+dealloc(AutoAttack)
+dealloc(PressKey)
+dealloc(HoldAttack)
+dealloc(AttackDelay)
+</AssemblerScript>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>12</ID>
+      <Description>"Pet Loot (In progress)"</Description>
+      <LastState Activated="1"/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[Enable]
+label(pet_teleport_restore)
+registersymbol(pet_teleport_restore)
+
+alloc(pet_teleport_hook,128)
+label(pet_teleport_return)
+
+label(return_normal)
+
+aobscan(pet_teleport_aob,8B 50 04 8B 00 ? ? 8D 4D)
+aobscan(vecctrl_set_position_aob,8B ? 24 ? 8B 41 ? 8B 40 ? 56 8D 71 ? 8B 4C 24 10)
+
+alloc(delay,4)
+delay:
+dw 0
+
+pet_teleport_aob:
+pet_teleport_restore:
+jmp pet_teleport_hook
+pet_teleport_return:
+
+pet_teleport_hook:
+inc [delay]
+cmp dword ptr [delay], #100
+mov [delay], 0
+
+push esi
+mov esi,eax
+mov edx,[eax+04]
+mov eax,[eax]
+pushad
+
+mov edi,[ebp+08]
+
+lea ecx,[edi+04]
+mov ebx,[edi+04]
+mov ebx,[ebx+20]
+call ebx
+
+push [esi+04]
+push [esi]
+push 00
+mov ecx,eax
+call vecctrl_set_position_aob
+
+popad
+pop esi
+jmp pet_teleport_return
+
+return_normal:
+mov edx,[eax+04]
+mov eax,[eax]
+jmp pet_teleport_return
+
+[Disable]
+pet_teleport_restore:
+mov edx,[eax+04]
+mov eax,[eax]
+
+unregistersymbol(pet_teleport_restore)
+dealloc(pet_teleport_hook)
+</AssemblerScript>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>13</ID>
+      <Description>"Magnus no balls"</Description>
+      <LastState Activated="1"/>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>[enable]
+aobscan(NFO,55 8B ? 83 ? ? 6A ? 68 ? ? ? ? 64 ? ? ? ? ? 50 83 ? ? 53 55 56 57 A1 ? ? ? ? 33 ? 50 8D ? ? ? 64 ? ? ? ? ? 8B ? 33 ? 39 ? ? ? ? ? 0F 84 ? ? ? ? 8B ? ? ? ? ? 8B ? 3B ? 0F 84 ? ? ? ? )
+registersymbol(NFO)
+
+NFO:
+db C3
+
+[disable]
+unregistersymbol(NFO)
+
+NFO:
+db 55
+</AssemblerScript>
+    </CheatEntry>
+  </CheatEntries>
+  <UserdefinedSymbols/>
+</CheatTable>
